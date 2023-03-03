@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        caption="msg://themaRubricBrowse.caption"
+        class="com.company.bratsk.web.ui.themarubric.ThemaRubricBrowse"
+        focusComponent="themaRubricsTable"
+        lookupComponent="themaRubricsTable"
+        messagesPack="com.company.bratsk.web.ui.themarubric">
+    <dsContext>
+        <hierarchicalDatasource id="themaRubricsDs"
+                                class="com.company.bratsk.entity.ThemaRubric"
+                                hierarchyProperty="parentThemaRubric"
+                                view="browse">
+            <query>
+                <![CDATA[select e from bratsk$ThemaRubric e]]>
+            </query>
+        </hierarchicalDatasource>
+
+        <hierarchicalDatasource id="departmentsDs" class="com.haulmont.thesis.core.entity.Department"
+                                view="browse" hierarchyProperty="parentDepartment">
+            <query>
+                <![CDATA[ select d from df$Department d where d.organization.id = :ds$organizationsDs order by d.name]]>
+                <filter>
+                    <and>
+                        <or>
+                            <c><![CDATA[lower(d.name) like :(?i)component$departmentName]]></c>
+                        </or>
+                    </and>
+                </filter>
+            </query>
+        </hierarchicalDatasource>
+
+
+    </dsContext>
+    <dialogMode height="600"
+                width="800"/>
+    <layout expand="themaRubricsTable"
+            spacing="true">
+        <filter id="filter"
+                applyTo="themaRubricsTable"
+                datasource="themaRubricsDs">
+            <properties include=".*"/>
+        </filter>
+        <treeTable id="themaRubricsTable"
+                   width="100%">
+            <actions>
+                <action id="create"
+                        openType="DIALOG"/>
+                <action id="edit"
+                        openType="DIALOG"/>
+                <action id="remove"/>
+            </actions>
+            <columns>
+                <column id="name"/>
+            </columns>
+            <rows datasource="themaRubricsDs"/>
+            <rowsCount/>
+            <buttonsPanel id="buttonsPanel"
+                          alwaysVisible="true">
+                <button id="createBtn" action="themaRubricsTable.create"/>
+                <button id="editBtn" action="themaRubricsTable.edit"/>
+                <button id="removeBtn" action="themaRubricsTable.remove"/>
+            </buttonsPanel>
+        </treeTable>
+    </layout>
+</window>

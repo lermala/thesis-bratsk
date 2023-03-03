@@ -1,0 +1,49 @@
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        class="com.company.bratsk.web.ui.taskgrouptask.ExtHoldingTaskGroupTaskFrame"
+        extends="com/haulmont/thesis_holding/web/ui/taskgrouptask/taskgrouptask-frame.xml"
+        messagesPack="com.company.bratsk.web.ui.taskgrouptask">
+
+    <dsContext/>
+
+    <layout>
+        <vbox id="tasksPanel">
+            <table id="tasksTable">
+                <buttonsPanel>
+                    <button action="tasksTable.add" icon=""/>
+                    <button action="tasksTable.addTask" icon=""/>
+                    <button id="createTasks"/>
+                    <button id="createFromPatternButton"/>
+                    <thesis:separator/>
+                    <button action="tasksTable.copy" icon="ts-font-icon:COPY"/>
+                    <button action="tasksTable.remove" icon="ts-font-icon:REMOVE"/>
+                </buttonsPanel>
+                <columns>
+                    <column id="descr"/>
+                    <column id="finishDate"/>
+                    <column id="user"/>
+                    <column id="task"/>
+                    <column id="createTs"/>
+                    <column id="version"/>
+                    <column id="fullDescr"/>
+                    <column id="priority.orderNo"/>
+                    <column id="taskType"/>
+                    <column id="controller"/>
+                    <column id="project"/>
+                    <column id="initiator"/>
+                    <column id="observer"/>
+                    <column id="duration"/>
+                    <column id="percentCompletion"/>
+                    <column id="responsibleExecutor" caption="msg://ExtTaskGroupTask.responsibleExecutor"/>
+                </columns>
+                <rows datasource="taskGroupTaskDs"/>
+            </table>
+        </vbox>
+    </layout>
+</window>

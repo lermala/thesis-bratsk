@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        class="com.company.bratsk.web.ui.statusnormativ.StatusNormativBrowse"
+        messagesPack="com.company.bratsk.web.ui.statusnormativ"
+        caption="msg://browseCaption"
+        lookupComponent="statusNormativsTable"
+        focusComponent="genericFilter">
+    <dsContext>
+        <collectionDatasource id="statusNormativsDs"
+                              class="com.company.bratsk.entity.StatusNormativ"
+                              view="browse">
+            <query>
+                <![CDATA[select e from bratsk$StatusNormativ e]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <layout>
+        <vbox id="filterBox" expand="table-panel" spacing="true" height="100%">
+            <filter id="genericFilter"
+                    datasource="statusNormativsDs" stylename="edit-area" applyTo="statusNormativsTable">
+                <properties include=".*"/>
+            </filter>
+            <vbox id="table-panel" expand="statusNormativsTable" spacing="true">
+                <table id="statusNormativsTable"
+                       width="100%"
+                       presentations="true"
+                       multiselect="true">
+                    <buttonsPanel id="buttonsPanel" alwaysVisible="true">
+                        <button id="createBtn"
+                                action="statusNormativsTable.create"/>
+                        <thesis:separator/>
+                        <button id="editBtn"
+                                action="statusNormativsTable.edit"/>
+                        <button id="removeBtn"
+                                action="statusNormativsTable.remove"/>
+                    </buttonsPanel>
+                    <actions>
+                        <action id="create"/>
+                        <action id="edit"/>
+                        <action id="remove"/>
+                    </actions>
+                    <rowsCount/>
+                    <columns>
+                        <column id="code"/>
+                        <column id="name"/>
+                    </columns>
+                    <rows datasource="statusNormativsDs"/>
+                </table>
+            </vbox>
+        </vbox>
+    </layout>
+</window>

@@ -1,0 +1,470 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        class="com.company.bratsk.web.ui.mpa.MpaEdit"
+        messagesPack="com.company.bratsk.web.ui.mpa"
+        caption="msg://editCaption"
+        datasource="cardDs">
+    <dsContext>
+        <datasource id="cardDs"
+                    class="com.company.bratsk.entity.Mpa"
+                    view="edit">
+            <collectionDatasource id="cardProcDs" property="procs"/>
+            <collectionDatasource id="cardRolesDs" property="roles"/>
+            <collectionDatasource id="cardProjectsDs" property="projects"/>
+        </datasource>
+        <datasource id="docOfficeDataDs" class="com.haulmont.thesis.core.entity.DocOfficeData" view="edit">
+            <collectionDatasource id="docOfficeDataAddresseesDs" property="docOfficeDataAddressees"/>
+            <collectionDatasource id="docTransferLogsDs" property="docTransferLogs"/>
+        </datasource>
+        <hierarchicalDatasource id="attachmentsDs" class="com.haulmont.workflow.core.entity.CardAttachment"
+                                datasourceClass="com.haulmont.thesis.web.ui.common.attachments.ThesisAttachmentsDataSource"
+                                view="card-edit" hierarchyProperty="versionOf">
+            <query>select a from wf$CardAttachment a where a.card.id = :ds$cardDs order by a.createTs desc</query>
+        </hierarchicalDatasource>
+        <collectionDatasource id="cardRelationsDs" class="com.haulmont.workflow.core.entity.CardRelation"
+                              view="card-relation">
+            <query>
+                <![CDATA[
+                select c from wf$CardRelation c where (c.card.id = :ds$cardDs or c.relatedCard.id = :ds$cardDs)
+                ]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="versionsDs" class="com.company.bratsk.entity.Mpa" view="version">
+            <query>
+                <![CDATA[select d from bratsk$Mpa d where d.versionOf.id = :ds$cardDs order by d.createTs]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="ownerDs" class="com.haulmont.thesis.core.entity.Employee" view="withuserdepartment"
+                              refreshMode="NEVER">
+            <query>
+                <![CDATA[select e from df$Employee e left join e.user user where (user is null or user.active = true) order by e.name]]>
+            </query>
+        </collectionDatasource>
+        <runtimePropsDatasource id="runtimePropsDs" mainDs="cardDs"/>
+        <collectionDatasource id="categoriesDs" class="com.haulmont.cuba.core.entity.Category" view="_local">
+            <query>
+                <![CDATA[select c from sys$Category c where c.entityType='bratsk$Mpa']]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="categoryDs" class="com.haulmont.thesis.core.entity.DocCategory" view="_local"
+                              refreshMode="NEVER">
+            <query>
+                <![CDATA[select c from df$Category c
+                where (c.docKind.id = :ds$cardDs.docKind or c.docKind is null)
+                      and c.docType.id = :ds$cardDs.docKind.docType
+                order by c.name]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="contractorsDs" class="com.haulmont.thesis.core.entity.Contractor" refreshMode="NEVER">
+            <query>
+                <![CDATA[select c from df$Contractor c order by c.name]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="departmentDs" class="com.haulmont.thesis.core.entity.Department" view="browse"
+                              refreshMode="NEVER">
+            <query>
+                <![CDATA[select d from df$Department d where d.organization.id = :ds$organizationDs order by d.name]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="organizationDs" class="com.haulmont.thesis.core.entity.Organization" view="_local">
+            <query>
+                <![CDATA[select o from df$Organization o order by o.name]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="statusNormativDs" class="com.company.bratsk.entity.StatusNormativ" view="_local">
+            <query>
+                <![CDATA[select o from bratsk$StatusNormativ o order by o.name]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="approverUsersDs" class="com.haulmont.thesis.core.entity.TsUser" view="_minimal">
+            <query><![CDATA[ select e from tm$User e]]></query>
+        </collectionDatasource>
+        <collectionDatasource id="executorUsersDs" class="com.haulmont.thesis.core.entity.TsUser" view="_minimal">
+            <query><![CDATA[ select e from tm$User e]]></query>
+        </collectionDatasource>
+        <collectionDatasource id="preparedUsersDs" class="com.haulmont.thesis.core.entity.TsUser" view="_minimal">
+            <query><![CDATA[ select e from tm$User e]]></query>
+        </collectionDatasource>
+        <collectionDatasource id="mpaStatusesDs" class="com.company.bratsk.entity.RelationTypeMPA"
+                              view="relationType-edit">
+            <query><![CDATA[ select rt from bratsk$RelationTypeMPA rt where rt.isAnAction <> true]]></query>
+        </collectionDatasource>
+    </dsContext>
+    <assign name="width" value="theme://thesis.gui.editor-fields.width"/>
+    <assign name="small_width" value="180px"/>
+    <assign name="textAreaHeight" value="176px"/>
+    <assign name="rightPanelWidth" value="theme://thesis.edit-actions-pane.button-width"/>
+    <assign name="rightPanelBoxWidth" value="theme://thesis.edit-actions-pane.width"/>
+    <layout expand="mainPane">
+        <hbox id="mainPane" stylename="no-window-padding-right" expand="tabsheet" width="100%">
+            <tabSheet id="tabsheet" height="100%">
+                <tab id="mainTab" caption="msg://mainTab">
+                    <groupBox id="docInfoGroupBox" stylename="edit-area" height="100%" width="100%">
+                        <scrollBox id="infoScrollBox" scrollBars="both" height="100%" contentWidth="100%">
+                            <vbox id="cardHeaderHolder" width="100%"/>
+                            <vbox id="infoVBox" width="AUTO">
+                                <hbox id="mainGridBox" stylename="thesis-main-grid-box">
+                                    <grid id="leftGrid" spacing="true" margin="true, true, false, false">
+                                        <columns>
+                                            <column flex="1"/>
+                                        </columns>
+                                        <rows>
+                                            <row id="templateNameRow">
+                                                <textField id="templateName" caption="msg://templateName"
+                                                           datasource="cardDs"
+                                                           property="templateName"
+                                                           width="${width}"
+                                                           required="true"
+                                                           requiredMessage="msg://templateNameMsg"/>
+                                            </row>
+                                            <row id="numberAndDateRow">
+                                                <hbox id="numberAndDateBox" stylename="container-for-two-fields">
+                                                    <textField id="docNumber" caption="msg://number"
+                                                               datasource="cardDs"
+                                                               property="number" width="${small_width}"/>
+                                                    <dateField id="date" caption="msg://date"
+                                                               datasource="cardDs" property="date"
+                                                               resolution="DAY" width="${small_width}"/>
+                                                </hbox>
+                                            </row>
+                                            <row id="themeRow">
+                                                <textField id="theme" caption="msg://theme" datasource="cardDs"
+                                                           property="theme" width="${width}"/>
+                                            </row>
+                                            <row id="commentRow">
+                                                <textArea id="comment" datasource="cardDs" resizable="false"
+                                                          property="comment" caption="msg://comment"
+                                                          width="${width}" height="${textAreaHeight}"/>
+                                            </row>
+                                            <row>
+                                                <lookupField id="statusNormativ" caption="msg://com.company.bratsk.entity/Mpa.statusNormativ"
+                                                                   datasource="cardDs"
+                                                                   optionsDatasource="statusNormativDs"
+                                                                   property="statusNormativ" width="${width}">
+                                                </lookupField>
+                                            </row>
+                                            <row>
+                                                <checkBox id="isPublic" caption="msg://com.company.bratsk.entity/Mpa.isPublic"
+                                                          datasource="cardDs"
+                                                          property="isPublic" width="${small_width}"/>
+                                            </row>
+                                            <row>
+                                                <hbox  stylename="container-for-two-fields">
+                                                    <dateField id="datePublicSite" caption="msg://com.company.bratsk.entity/Mpa.datePublicSite"
+                                                               datasource="cardDs" property="datePublicSite"
+                                                               resolution="DAY" width="${small_width}"/>
+                                                    <checkBox id="isPublicSite" caption="msg://com.company.bratsk.entity/Mpa.isPublicSite"
+                                                               datasource="cardDs"
+                                                               property="isPublicSite" width="${small_width}"/>
+                                                </hbox>
+                                            </row>
+                                            <row>
+                                                <hbox  stylename="container-for-two-fields">
+                                                    <dateField id="dateSentToProcurature" caption="msg://com.company.bratsk.entity/Mpa.dateSentToProcurature"
+                                                               datasource="cardDs" property="dateSentToProcurature"
+                                                               resolution="DAY" width="${small_width}"/>
+                                                    <checkBox id="sentToProcuratura" caption="msg://com.company.bratsk.entity/Mpa.sentToProcuratura"
+                                                              datasource="cardDs"
+                                                              property="sentToProcuratura" width="${small_width}"/>
+                                                </hbox>
+                                            </row>
+                                        </rows>
+                                    </grid>
+                                    <vbox id="gridSeparator" stylename="grid-separator" height="100%" width="1px"/>
+                                    <grid id="rightGrid" spacing="true" margin="true, true, false, true">
+                                        <columns>
+                                            <column flex="1"/>
+                                        </columns>
+                                        <rows>
+                                            <row id="docCategoryRow">
+                                                <lookupPickerField id="docCategory" caption="msg://docCategory"
+                                                                   datasource="cardDs" property="docCategory"
+                                                                   optionsDatasource="categoryDs" width="${width}">
+                                                    <actions>
+                                                        <action id="open"/>
+                                                    </actions>
+                                                </lookupPickerField>
+                                            </row>
+                                            <row id="orgRow">
+                                                <lookupPickerField id="organization" caption="msg://organization"
+                                                                   datasource="cardDs"
+                                                                   optionsDatasource="organizationDs"
+                                                                   property="organization" width="${width}">
+                                                </lookupPickerField>
+                                            </row>
+                                            <row id="depRow">
+                                                <lookupPickerField id="department" caption="msg://department"
+                                                                   datasource="cardDs" property="department"
+                                                                   optionsDatasource="departmentDs"
+                                                                   width="${width}">
+                                                    <actions>
+                                                        <action id="open"/>
+                                                    </actions>
+                                                </lookupPickerField>
+                                            </row>
+                                            <row id="parentCardRow">
+                                                <pickerField id="parentCard" caption="msg://parentCard"
+                                                             datasource="cardDs" property="parentCard"
+                                                             width="${width}">
+                                                </pickerField>
+                                            </row>
+                                            <row id="approverUserRow">
+                                                <lookupPickerField id="approverUser" property="approverUser"
+                                                             datasource="cardDs"
+                                                             width="theme://thesis.gui.editor-fields.width"
+                                                             caption="msg://com.company.bratsk.entity/Mpa.approverUser"
+                                                             optionsDatasource="approverUsersDs"/>
+                                            </row>
+                                            <row id="preparedUserRow">
+                                                <lookupPickerField id="prepared" property="prepared"
+                                                             datasource="cardDs"
+                                                             width="theme://thesis.gui.editor-fields.width"
+                                                             caption="msg://com.company.bratsk.entity/Mpa.prepared"
+                                                             optionsDatasource="preparedUsersDs"/>
+                                            </row>
+                                            <row id="executorUserRow">
+                                                <lookupPickerField id="executorUser" property="executorUser"
+                                                             datasource="cardDs"
+                                                             width="theme://thesis.gui.editor-fields.width"
+                                                             caption="msg://com.company.bratsk.entity/Mpa.executorUser"
+                                                             optionsDatasource="executorUsersDs"/>
+                                            </row>
+                                            <row id="mpaStatusRow">
+                                                <textField id="mpaStatus" datasource="cardDs"
+                                                           editable="false" property="mpaStatus"
+                                                           width="400px" caption="msg://mpaStatuses">
+                                                </textField>
+                                            </row>
+                                            <row id="checkBoxesRow">
+                                                <vbox id="checkBoxesBox" stylename="thesis-checkbox-box" spacing="true">
+                                                    <checkBox id="availableForAllCheckBox" datasource="cardDs"
+                                                              property="availableForAll"
+                                                              caption="msg://availableForAll"
+                                                              visible="true"/>
+                                                    <checkBox id="global" datasource="cardDs"
+                                                              property="global" caption="msg://global"
+                                                              visible="false"/>
+                                                    <checkBox id="parentCardAccess" datasource="cardDs"
+                                                              caption="msg://parentCardAccess"
+                                                              property="parentCardAccess"/>
+                                                </vbox>
+                                            </row>
+                                            <row id="runtimePropertiesRow">
+                                                <hiddenBox id="runtimePropertiesHiddenBox" caption="msg://extraFields"
+                                                           collapsable="true" visible="false"
+                                                           width="${width}">
+                                                    <vbox id="runtimePropertiesVBox" width="100%">
+                                                        <runtimeProperties id="runtimePropertiesFrameMain"
+                                                                           runtimeDs="runtimePropsDs"
+                                                                           categoriesDs="categoriesDs"
+                                                                           fieldWidth="100%"/>
+                                                    </vbox>
+                                                </hiddenBox>
+                                            </row>
+                                            <row id="signatureAndAttachmentRow">
+                                                <vbox id="signatureAndAttachmentMainBox">
+                                                    <vbox id="attachmentMainBox"
+                                                          margin="true, false, false, false">
+                                                        <label id="attachmentLabel"
+                                                               value="msg://attachments"
+                                                               stylename="label-like-caption"/>
+                                                        <grid id="attachmentInfo"
+                                                              spacing="true"
+                                                              width="${width}">
+                                                            <columns>
+                                                                <column flex="1"/>
+                                                            </columns>
+                                                            <rows>
+                                                                <row id="attachmentRow">
+                                                                    <vbox id="attachmentBox" height="100%">
+                                                                    </vbox>
+                                                                </row>
+                                                            </rows>
+                                                        </grid>
+                                                    </vbox>
+                                                </vbox>
+                                            </row>
+                                        </rows>
+                                    </grid>
+                                </hbox>
+                            </vbox>
+                        </scrollBox>
+                    </groupBox>
+                </tab>
+                <tab id="cardProjectsTab" caption="msg://cardProjectsTab" lazy="false">
+                    <groupBox id="cardProjectsTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="cardProjectsFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="cardProjectsFrameBox" margin="false,true,false,false">
+                            <frame id="cardProjectsFrame" screen="cardProjectsFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="attachmentsTab" caption="msg://attachments">
+                    <groupBox id="attachmentsTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="atdrop">
+                        <hbox id="atdrop" width="100%" height="100%" margin="false,true,false,false">
+                            <frame screen="cardAttachmentsFrame" id="cardAttachmentsFrame" height="100%"/>
+                        </hbox>
+                    </groupBox>
+                </tab>
+                <tab id="office" caption="msg://office" lazy="false">
+                    <groupBox id="officeTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="docOfficeFrame">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <frame id="docOfficeFrame" screen="docOfficeFrame" height="100%"/>
+                    </groupBox>
+                </tab>
+                <tab id="docTreeTab" caption="msg://hierarchy">
+                    <groupBox id="docTreeTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="cardTreeFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="cardTreeFrameBox" width="100%" margin="false,true,false,false">
+                            <frame id="cardTreeFrame" screen="cardTreeFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="resolutionsTab" caption="msg://resolutionsTab">
+                    <groupBox id="resolutionsTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="resolutionsPane">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="resolutionsPane" expand="resolutionsFrame" margin="false,true,false,false"
+                              width="100%" spacing="true">
+                            <frame id="resolutionsFrame" screen="resolutionsFrame"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="processTab" caption="msg://processTab">
+                    <groupBox id="processTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="cardProcFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="cardProcFrameBox" margin="false,true,false,false">
+                            <frame id="cardProcFrame" screen="docProcFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="cardLinksTab" caption="msg://cardLinksTab" lazy="false">
+                    <groupBox id="cardLinksTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="cardLinksFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="cardLinksFrameBox" margin="false,true,false,false">
+                            <frame id="cardLinksFrame" screen="docLinksFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="cardCommentTab" caption="msg://cardCommentTab">
+                    <groupBox id="cardCommentTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="cardCommentFrame">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <frame id="cardCommentFrame" screen="cardCommentFrame" height="100%"/>
+                    </groupBox>
+                </tab>
+                <tab id="docLogTab" caption="msg://docLogTab" lazy="true">
+                    <groupBox id="docLogTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="cardLogFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="cardLogFrameBox" margin="false,true,false,false">
+                            <frame id="cardLogFrame" screen="cardLogFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="openHistoryTab" caption="msg://openHistoryTab" lazy="false">
+                    <groupBox id="openHistoryTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="openHistoryFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="openHistoryFrameBox" margin="false,true,false,false">
+                            <iframe id="openHistoryFrame" screen="openHistoryFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="versionsTab" caption="msg://versionsTab" lazy="false">
+                    <groupBox id="versionsTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="versionsTableBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="versionsTableBox" margin="false,true,false,false">
+                            <table id="versionsTable" editable="false" sortable="true" height="100%" width="100%">
+                                <columns>
+                                    <column id="createTs" caption="msg://createTs" width="150"/>
+                                    <column id="docKind" caption="msg://docKind"/>
+                                    <column id="number" caption="msg://number"/>
+                                    <column id="date" caption="msg://date" width="150"/>
+                                </columns>
+                                <rows datasource="versionsDs"/>
+                            </table>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="templateSecurityTab" caption="msg://securityTab" lazy="true">
+                    <groupBox id="templateSecurityTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="templateSecurityFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="templateSecurityFrameBox" margin="false,true,false,false">
+                            <frame id="templateSecurityFrame" screen="templateSecurityFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="securityTab" caption="msg://securityTab" lazy="true">
+                    <groupBox id="securityTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%" expand="securityFrameBox">
+                        <vbox id="cardHeaderHolder" width="100%"/>
+                        <vbox id="securityFrameBox" margin="false,true,false,false">
+                            <frame id="securityFrame" screen="securityFrame" height="100%"/>
+                        </vbox>
+                    </groupBox>
+                </tab>
+                <tab id="runtimePropertiesTab" caption="msg://runtimePropsTab">
+                    <groupBox id="runtimePropertiesTabGroupBox" stylename="edit-area"
+                              height="100%" width="100%">
+                        <scrollBox id="runtimePropertiesTabScrollBox" scrollBars="both"
+                                   height="100%" contentWidth="100%">
+                            <vbox id="cardHeaderHolder" width="100%"/>
+                            <hbox id="runtimePropertiesTabHBox" spacing="true" stylename="thesis-main-grid-box">
+                                <vbox id="runtimePropertiesTabVBox"
+                                      margin="true, false, true, false"
+                                      stylename="runtime-properties-tab-v-box"
+                                      width="${width}">
+                                    <runtimeProperties id="runtimePropertiesFrameTab"
+                                                       runtimeDs="runtimePropsDs"
+                                                       categoriesDs="categoriesDs"
+                                                       fieldWidth="100%"/>
+                                </vbox>
+                                <vbox id="runtimePropertiesTabGridSeparator" stylename="grid-separator"
+                                      height="100%" width="1px"/>
+                            </hbox>
+                        </scrollBox>
+                    </groupBox>
+                </tab>
+
+                <tab id="cardRelatesFrameTab" caption="msg://com.company.bratsk.entity/Mpa.cardRelates" margin="true">
+                    <iframe id="cardRelatesFrame" screen="cardRelates.frame" height="100%"/>
+                </tab>
+            </tabSheet>
+            <scrollBox id="buttonsPane" stylename="t-right-buttons-panel" width="${rightPanelBoxWidth}" spacing="true"
+                       height="100%">
+                <vbox id="actionsPane" stylename="edit-area t-right-buttons-panel-container" width="${rightPanelWidth}">
+                    <frame id="actionsFrame" screen="actionsFrame"/>
+                </vbox>
+                <frame id="startProcessButtonsFrame" screen="startProcessButtonsFrame" width="${rightPanelWidth}"
+                       stylename="t-right-buttons-panel-container"/>
+                <vbox id="otherActions" width="${rightPanelWidth}" spacing="true"
+                      stylename="edit-area t-right-buttons-panel-container">
+                    <button id="createFromPatternButton" caption="msg://createFromPattern" width="100%"/>
+                    <popupButton id="createSubCardButton" width="100%"
+                                 icon="ts-font-icon:PLUS" caption="msg://actions.Create"/>
+                    <runReportPopupButton id="print"
+                                          icon="ts-font-icon:PRINT" caption="msg://print"
+                                          width="100%"/>
+                    <button id="copyLinkButton" caption="msg://copyLink" width="100%"
+                            icon="ts-font-icon:LINK"/>
+                </vbox>
+            </scrollBox>
+        </hbox>
+    </layout>
+</window>

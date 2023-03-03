@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		  http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <!-- Application properties config files -->
+    <context-param>
+        <param-name>appPropertiesConfig</param-name>
+        <param-value>
+            classpath:thesis-mobile-rest-app.properties
+            classpath:bratsk-mobile-rest-app.properties
+            /WEB-INF/local.app.properties
+            file:${catalina.home}/conf/app-mobile-rest/local.mobile-rest-app.properties
+        </param-value>
+    </context-param>
+    <!-- Used application components -->
+    <context-param>
+        <param-name>appComponents</param-name>
+        <param-value>
+            com.haulmont.thesis.app
+            com.haulmont.thesis.addons.holding
+        </param-value>
+    </context-param>
+
+    <!-- Servlet Context listeners -->
+    <listener>
+        <listener-class>com.haulmont.thesis.mobile.rest.sys.MobileRestAPIAppContextLoader</listener-class>
+    </listener>
+
+    <!-- Mobile Rest servlets and filters are initialized by com.haulmont.thesis.mobile.rest.sys.ThesisMobileRestServletsInitializer -->
+
+</web-app>

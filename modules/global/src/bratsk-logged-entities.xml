@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<entities xmlns="http://schemas.haulmont.com/thesis/4.0/loggedEntities.xsd">
+
+    <entity metaClass="bratsk$Mpa"/>
+    <entity metaClass="bratsk$StatusNormativ"/>
+    <entity metaClass="bratsk$ExtTaskGroupTask"/>
+    <entity metaClass="bratsk$ExtTask"/>
+    <entity metaClass="bratsk$RelatedCards"/>
+    <entity metaClass="bratsk$ThemaRubric"/>
+    <entity metaClass="bratsk$RelationTypeMPA"/>
+</entities>

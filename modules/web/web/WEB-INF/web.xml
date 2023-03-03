@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app xmlns="http://java.sun.com/xml/ns/javaee"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://java.sun.com/xml/ns/javaee
+		 http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd"
+         version="3.0">
+
+    <!-- Application properties config files -->
+    <context-param>
+        <param-name>appPropertiesConfig</param-name>
+        <param-value>
+            classpath:com/haulmont/cuba/web-app.properties
+            classpath:thesis-web-app.properties
+            classpath:bratsk-web-app.properties
+            /WEB-INF/local.app.properties
+            file:${catalina.home}/conf/app/local.web-app.properties
+        </param-value>
+    </context-param>
+    <!-- Used application components -->
+    <context-param>
+        <param-name>appComponents</param-name>
+        <param-value>
+            com.haulmont.thesis.app
+            com.haulmont.thesis.addons.holding
+        </param-value>
+    </context-param>
+    <!-- Other context params -->
+    <context-param>
+        <description>Vaadin production mode</description>
+        <param-name>productionMode</param-name>
+        <param-value>false</param-value>
+    </context-param>
+    <context-param>
+        <description>Web resources version for correct caching in browser</description>
+        <param-name>webResourcesTs</param-name>
+        <param-value>${webResourcesTs}</param-value>
+    </context-param>
+
+    <!-- Servlet Context listeners -->
+    <listener>
+        <listener-class>com.haulmont.thesis.web.sys.ThesisWebAppContextLoader</listener-class>
+    </listener>
+
+    <listener>
+        <listener-class>com.vaadin.server.communication.JSR356WebsocketInitializer</listener-class>
+    </listener>
+
+    <!-- Servlets and filters are initialized by com.haulmont.thesis.web.sys.ThesisWebServletsInitializer -->
+
+</web-app>

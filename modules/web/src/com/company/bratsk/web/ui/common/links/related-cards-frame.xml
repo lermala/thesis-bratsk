@@ -1,0 +1,81 @@
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        class="com.company.bratsk.web.ui.common.links.RelatedCardsFrame"
+        messagesPack="com.company.bratsk.web.ui.common.links">
+    <dsContext>
+        <collectionDatasource id="cardRelatesDs" class="com.company.bratsk.entity.RelatedCards" view="edit"
+                              refreshMode="NEVER">
+            <query>
+                <![CDATA[select rc from bratsk$RelatedCards rc where
+                (rc.sourceCard.id = :custom$cardId or rc.relatedCard.id = :custom$cardId) and rc.deleteTs
+                is null order by rc.createTs desc]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="relationTypesDs" class="com.company.bratsk.entity.RelationTypeMPA"
+                              view="relationType-edit" refreshMode="NEVER"/>
+    </dsContext>
+    <layout>
+            <vbox id="relatesBox" expand="split" width="100%">
+                <split id="split" orientation="horizontal" width="100%">
+                    <vbox id="tableBox" margin="false;true;false;false" height="100%">
+                        <scrollBox orientation="vertical" scrollBars="vertical" height="600px"
+                                   margin="false;true;false;false">
+                            <table id="relatesTable" multiselect="false" height="AUTO"
+                                   width="100%" columnControlVisible="false" caption="msg://relates">
+                                <buttonsPanel>
+                                    <button id="addRelate" caption="msg://addRelate"/>
+                                    <button id="remove" action="relatesTable.remove" icon="icons/remove.png"/>
+                                </buttonsPanel>
+                                <actions>
+                                    <action id="remove"/>
+                                </actions>
+                                <columns>
+                                    <column id="related" caption="msg://related"/>
+                                </columns>
+                                <rows datasource="cardRelatesDs"/>
+                                <rowsCount/>
+                            </table>
+                        </scrollBox>
+                    </vbox>
+                    <vbox id="relationSettingsBox" margin="false;false;false;true">
+                        <groupBox id="relateSettingsBox" spacing="true" width="AUTO"
+                                  caption="msg://relationDetails" enable="false">
+                            <grid id="relationTypesGrid" spacing="true" margin="true" width="AUTO">
+                                <columns count="2"/>
+                                <rows>
+                                    <row>
+                                        <label id="currentDocLabel" value="msg://currentDoc" align="MIDDLE_CENTER"/>
+                                    </row>
+                                    <row>
+                                        <lookupField id="currentDoc" colspan="2" width="AUTO"/>
+                                    </row>
+                                    <row>
+                                        <lookupField id="sourceRelationType" width="AUTO"/>
+                                    </row>
+                                </rows>
+                            </grid>
+                            <grid id="inverseRelationTypesGrid" spacing="true" margin="true">
+                                <columns count="2"/>
+                                <rows>
+                                    <row>
+                                        <label id="relatedDocLabel" value="msg://relatedDoc" align="MIDDLE_CENTER"/>
+                                    </row>
+                                    <row>
+                                        <lookupField id="relatedDoc" colspan="2" width="AUTO"/>
+                                    </row>
+                                    <row>
+                                        <lookupField id="relatedRelationType" width="AUTO"/>
+                                    </row>
+                                </rows>
+                            </grid>
+                        </groupBox>
+                    </vbox>
+                </split>
+            </vbox>
+    </layout>
+</window>

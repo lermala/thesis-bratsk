@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
+        class="com.company.bratsk.web.ui.mpa.MpaBrowse"
+        extends="com/company/bratsk/web/ui/mpa/mpa-browse.xml"
+        caption="msg://templateBrowseCaption">
+    <dsContext>
+        <groupDatasource id="cardsDs">
+            <query>
+                <![CDATA[select distinct d from bratsk$Mpa d
+                where d.template = true and d.versionOf is null
+                order by d.templateName]]>
+            </query>
+        </groupDatasource>
+    </dsContext>
+    <layout>
+        <vbox>
+            <split id="split">
+                <vbox id="table-panel">
+                    <groupTable id="cardsTable">
+                        <columns>
+                            <column id="templateName" caption="msg://templateName" visible="true" ext:index="2"/>
+                            <column id="substitutedCreator" caption="msg://creator" ext:index="3"/>
+                            <column id="important" visible="false"/>
+                            <column id="locState" visible="false"/>
+                            <column id="date" visible="false"/>
+                            <column id="number" visible="false"/>
+                            <column id="proc.locName" caption="msg://procName" visible="false"/>
+                        </columns>
+                    </groupTable>
+                </vbox>
+                <vbox id="cardDetailsTabSheetBox" visible="false"/>
+            </split>
+        </vbox>
+    </layout>
+</window>

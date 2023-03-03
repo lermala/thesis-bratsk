@@ -1,0 +1,5 @@
+@import "thesis-light-ext";
+
+@mixin com_company_bratsk {
+  @include com_company_bratsk-thesis-light-ext;
+}

@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<screen-config xmlns="http://schemas.haulmont.com/cuba/screens.xsd">
+    <include file="/bratsk-screens.xml"/>
+    <screen id="bratsk$Mpa.browse" template="com/company/bratsk/web/ui/mpa/mpa-browse.xml"/>
+    <screen id="bratsk$Mpa.edit" template="com/company/bratsk/web/ui/mpa/mpa-edit.xml"/>
+    <screen id="bratsk$Mpa.lookup" template="com/company/bratsk/web/ui/mpa/mpa-browse.xml"/>
+    <screen id="bratsk$Mpa.templateBrowse" template="com/company/bratsk/web/ui/mpa/mpa-template-browse.xml"/>
+    <screen id="bratsk$StatusNormativ.browse"
+            template="com/company/bratsk/web/ui/statusnormativ/status-normativ-browse.xml"/>
+    <screen id="bratsk$StatusNormativ.edit"
+            template="com/company/bratsk/web/ui/statusnormativ/status-normativ-edit.xml"/>
+    <screen id="bratsk$StatusNormativ.lookup"
+            template="com/company/bratsk/web/ui/statusnormativ/status-normativ-browse.xml"/>
+    <screen id="taskGroupTasksFrame"
+            template="com/company/bratsk/web/ui/taskgrouptask/ext-taskgrouptask-frame.xml"/>
+    <screen id="tm$TaskGroup.browse"
+            template="com/company/bratsk/web/ui/taskgroup/ext-taskgroup-browse.xml"/>
+    <screen id="tm$TaskGroup.edit"
+            template="com/company/bratsk/web/ui/taskgroup/ext-taskgroup-edit.xml"/>
+    <screen id="tm$Task.edit"
+            template="com/company/bratsk/web/ui/task/ext-task-edit.xml"/>
+    <screen id="tm$Task.browse"
+            template="com/company/bratsk/web/ui/task/ext-task-browse.xml"/>
+    <screen id="tm$Task.edit"
+            template="com/company/bratsk/web/ui/task/ext-task-edit.xml"/>
+    <screen id="tm$TaskPattern.browse"
+            template="com/company/bratsk/web/ui/taskpattern/ext-taskpattern-browse.xml"/>
+    <screen id="tm$TaskPattern.edit"
+            template="com/company/bratsk/web/ui/taskpattern/ext-taskpattern-edit.xml"/>
+    <screen id="bratsk$RelationTypeMPA.browse"
+            template="com/company/bratsk/web/ui/relationtypempa/relation-type-mpa-browse.xml"/>
+    <screen id="bratsk$RelationTypeMPA.edit"
+            template="com/company/bratsk/web/ui/relationtypempa/relation-type-mpa-edit.xml"/>
+    <screen id="cardRelates.frame"
+            template="com/company/bratsk/web/ui/common/links/related-cards-frame.xml"/>
+    <screen id="cardsToRelate"
+            template="com/company/bratsk/web/ui/common/links/cards-to-relate.xml"/>
+    <screen id="bratsk$ThemaRubric.edit" template="com/company/bratsk/web/ui/themarubric/thema-rubric-edit.xml"/>
+    <screen id="bratsk$ThemaRubric.lookup" template="com/company/bratsk/web/ui/themarubric/thema-rubric-browse.xml"/>
+</screen-config>

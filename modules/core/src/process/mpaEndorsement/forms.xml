@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<forms xmlns="http://www.haulmont.com/schema/cuba/workflow/forms.xsd">
+
+    <save>
+        <invoke class="com.haulmont.thesis.gui.processaction.task.NotificationAction" after="true"/>
+    </save>
+
+    <start>
+        <invoke class="com.haulmont.thesis.core.app.appointment.wf.AppointmentAction" before="true"/>
+        <screen id="transition.form" before="true">
+            <param name="cardRolesVisible" value="true"/>
+            <param name="requiredRoles" value="Approver|Endorsement, Initiator"/>
+            <param name="commentVisible" value="true"/>
+            <param name="dueDateVisible" value="true"/>
+            <param name="onlineEditingVisible" value="true"/>
+            <param name="signerRole" value="Approver"/>
+            <param name="signingPreparation" value="true"/>
+        </screen>
+        <invoke class="com.haulmont.thesis.gui.processaction.task.NotificationAction" after="true"/>
+    </start>
+
+    <cancel>
+        <screen id="resolution.form" before="true">
+            <param name="attachmentsVisible" value="false"/>
+            <param name="commentRequired" value="true"/>
+        </screen>
+    </cancel>
+
+    <activity name="Preparation">
+        <transition name="ToEndorsement" style="wf-success">
+            <screen id="transition.form" before="true">
+                <param name="cardRolesVisible" value="true"/>
+                <param name="requiredRoles" value="Approver|Endorsement, Initiator"/>
+                <param name="commentVisible" value="true"/>
+                <param name="refusedOnlyVisible" value="true"/>
+                <param name="dueDateVisible" value="true"/>
+                <param name="signerRole" value="Approver"/>
+                <param name="signingPreparation" value="true"/>
+            </screen>
+        </transition>
+        <transition name="ToImprovement" style="wf-failure">
+            <screen id="doc.resolution.form">
+                <param name="attachmentsVisible" value="true"/>
+                <param name="commentRequired" value="true"/>
+            </screen>
+        </transition>
+    </activity>
+
+    <activity name="Improvement">
+        <transition name="ToEndorsement" style="wf-success">
+            <screen id="transition.form" before="true">
+                <param name="cardRolesVisible" value="true"/>
+                <param name="requiredRoles" value="Approver|Endorsement, Initiator"/>
+                <param name="commentVisible" value="true"/>
+                <param name="refusedOnlyVisible" value="true"/>
+                <param name="dueDateVisible" value="true"/>
+                <param name="signerRole" value="Approver"/>
+                <param name="signingPreparation" value="true"/>
+            </screen>
+        </transition>
+    </activity>
+
+    <activity name="Endorsement">
+        <transition name="Ok" style="wf-success">
+            <screen id="resolution-signature.form">
+                <param name="attachmentsVisible" value="true"/>
+                <param name="commentRequired" value="false"/>
+            </screen>
+        </transition>
+        <transition name="NotOk" style="wf-failure">
+            <screen id="doc.resolution.form">
+                <param name="attachmentsVisible" value="true"/>
+                <param name="commentRequired" value="true"/>
+            </screen>
+        </transition>
+    </activity>
+
+    <activity name="Approval">
+        <transition name="Ok" style="wf-success">
+            <screen id="resolution-signature.form">
+                <param name="attachmentsVisible" value="true"/>
+                <param name="commentRequired" value="false"/>
+                <param name="signCard" value="true"/>
+                <param name="signatureRequiredForEdm" value="true"/>
+            </screen>
+        </transition>
+        <transition name="NotOk" style="wf-failure">
+            <screen id="doc.resolution.form">
+                <param name="attachmentsVisible" value="true"/>
+                <param name="commentRequired" value="true"/>
+            </screen>
+        </transition>
+        <transition name="Refuse" style="wf-failure">
+            <screen id="doc.resolution.form">
+                <param name="attachmentsVisible" value="true"/>
+                <param name="commentRequired" value="true"/>
+            </screen>
+        </transition>
+    </activity>
+
+    <activity name="Registration">
+        <transition name="Ok">
+            <condition class="com.haulmont.thesis.gui.processaction.doc.IsPackageDocCondition" before="true">
+                <screen id="edm-package-registration-confirm.form"  before="true" />
+            </condition>
+            <condition class="com.haulmont.thesis.gui.processaction.doc.IsPackageDocCondition" positive="false" before="true">
+                <screen id="registration.form">
+                    <param name="visibleRoles" value="Secretary, Initiator"/>
+                    <param name="requiredRoles" value="Secretary, Initiator"/>
+                    <param name="reopenEditor" value="true"/>
+                </screen>
+            </condition>
+        </transition>
+        <transition name="NotOk" style="wf-failure">
+            <screen id="resolution.form">
+                <param name="commentRequired" value="true"/>
+                <param name="attachmentsVisible" value="false"/>
+            </screen>
+        </transition>
+    </activity>
+
+</forms>

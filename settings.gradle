@@ -1,0 +1,16 @@
+/*
+ * Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+ * Haulmont Samara proprietary and confidential.
+ * Use is subject to license terms.
+ */
+
+rootProject.name = 'bratsk'
+def modulePrefix = 'app'
+include(":${modulePrefix}-global" , ":${modulePrefix}-core" , ":${modulePrefix}-gui" ,
+        ":${modulePrefix}-web" , ":${modulePrefix}-portal"  , ":${modulePrefix}-mobile-rest" )
+project(":${modulePrefix}-global" ).projectDir = new File(settingsDir, 'modules/global')
+project(":${modulePrefix}-core" ).projectDir = new File(settingsDir, 'modules/core')
+project(":${modulePrefix}-gui" ).projectDir = new File(settingsDir, 'modules/gui')
+project(":${modulePrefix}-web" ).projectDir = new File(settingsDir, 'modules/web')
+project(":${modulePrefix}-portal" ).projectDir = new File(settingsDir, 'modules/portal')
+project(":${modulePrefix}-mobile-rest" ).projectDir = new File(settingsDir, 'modules/mobile-rest')

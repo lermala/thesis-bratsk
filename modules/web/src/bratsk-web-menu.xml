@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<menu-config xmlns="http://schemas.haulmont.com/cuba/menu.xsd">
+    <menu id="taskman">
+        <item id="tm$Task.edit" shortcut="${thesis.shortcut.taskEdit}">
+            <permissions>
+                <permission type="ENTITY_OP" target="tm$Task:create"/>
+            </permissions>
+        </item>
+        <item id="tm$Task.browse" shortcut="${thesis.shortcut.taskBrowse}"/>
+
+        <separator/>
+        <item id="newTaskGroupEditor" class="com.haulmont.thesis.web.ui.taskgroup.NewTaskGroupEditor">
+            <permissions>
+                <permission type="ENTITY_OP" target="tm$TaskGroup:create"/>
+            </permissions>
+        </item>
+        <item id="tm$TaskGroup.browse"/>
+
+        <separator/>
+
+        <item id="tm$TaskPattern.browse"/>
+        <item id="tm$TaskGroupPattern.browse"/>
+
+        <separator/>
+
+        <item id="tm$TaskType.browse"/>
+        <item id="tm$ScheduleTask.browse"/>
+    </menu>
+
+    <menu id="docflow">
+
+        <item id="docCreatorItem" shortcut="${thesis.shortcut.docEdit}"
+              class="com.haulmont.thesis.web.ui.common.CreateDocMenuItemController">
+            <param name="docType" value="df$SimpleDoc"/>
+            <permissions>
+                <permission type="ENTITY_OP" target="df$SimpleDoc:create"/>
+            </permissions>
+        </item>
+
+        <item id="df$SimpleDoc.browse" shortcut="${thesis.shortcut.docBrowse}"/>
+
+        <separator/>
+
+        <item id="contractCreatorItem" shortcut="${thesis.shortcut.contractEdit}"
+              class="com.haulmont.thesis.web.ui.common.CreateDocMenuItemController">
+            <param name="docType" value="df$Contract"/>
+            <permissions>
+                <permission type="ENTITY_OP" target="df$Contract:create"/>
+            </permissions>
+        </item>
+
+        <item id="df$Contract.browse" shortcut="${thesis.shortcut.contractBrowse}"/>
+
+        <separator/>
+        <item id="meetingCreatorItem" shortcut="${thesis.shortcut.meetingEdit}"
+              class="com.haulmont.thesis.web.ui.common.CreateDocMenuItemController">
+            <param name="docType" value="df$MeetingDoc"/>
+            <permissions>
+                <permission type="ENTITY_OP" target="df$MeetingDoc:create"/>
+            </permissions>
+        </item>
+        <item id="df$MeetingDoc.browse" shortcut="${thesis.shortcut.meetingBrowse}"/>
+
+        <separator/>
+        <item id="accountDocCreatorItem" class="com.haulmont.thesis.web.ui.common.CreateDocMenuItemController">
+            <param name="docType" value="df$AccountDoc"/>
+            <permissions>
+                <permission type="SCREEN" target="df$AccountDoc.screen"/>
+                <permission type="ENTITY_OP" target="df$AccountDoc:create"/>
+            </permissions>
+        </item>
+        <item id="createOutgoingFormalizedDocumentWindow" openType="DIALOG">
+            <permissions>
+                <permission type="SCREEN" target="df$AccountDoc.screen"/>
+                <permission type="ENTITY_OP" target="df$AccountDoc:create"/>
+            </permissions>
+        </item>
+        <item id="df$AccountDoc.browse">
+            <permissions>
+                <permission type="SCREEN" target="df$AccountDoc.screen"/>
+            </permissions>
+        </item>
+        <separator/>
+        <item id="packageDocCreatorItem" class="com.haulmont.thesis.web.ui.common.CreateDocMenuItemController">
+            <param name="docType" value="df$PackageDoc"/>
+            <permissions>
+                <permission type="SCREEN" target="df$PackageDoc.screen"/>
+                <permission type="ENTITY_OP" target="df$PackageDoc:create"/>
+            </permissions>
+        </item>
+        <item id="df$PackageDoc.browse">
+            <permissions>
+                <permission type="SCREEN" target="df$PackageDoc.screen"/>
+            </permissions>
+        </item>
+        <separator/>
+        <item id="mpaDocCreatorItem"
+              class="com.haulmont.thesis.web.ui.common.CreateDocMenuItemController">
+            <param name="docType" value="bratsk$Mpa"/>
+            <permissions>
+                <permission type="ENTITY_OP" target="bratsk$Mpa:create"/>
+            </permissions>
+        </item>
+        <item id="Mpa.lookup" screen="bratsk$Mpa.lookup"/>
+        <separator/>
+        <menu id="templates">
+            <item id="df$SimpleDoc.templateBrowse">
+                <param name="inTemplates" value="true"/>
+                <permissions>
+                    <permission type="ENTITY_OP" target="df$SimpleDoc:create"/>
+                </permissions>
+            </item>
+            <item id="df$Contract.templateBrowse">
+                <param name="inTemplates" value="true"/>
+                <permissions>
+                    <permission type="ENTITY_OP" target="df$Contract:create"/>
+                </permissions>
+            </item>
+            <item id="df$MeetingDoc.templateBrowse">
+                <param name="inTemplates" value="true"/>
+                <permissions>
+                    <permission type="ENTITY_OP" target="df$MeetingDoc:create"/>
+                </permissions>
+            </item>
+            <item id="df$AccountDoc.templateBrowse">
+                <param name="inTemplates" value="true"/>
+                <permissions>
+                    <permission type="SCREEN" target="df$AccountDoc.screen"/>
+                    <permission type="ENTITY_OP" target="df$AccountDoc:create"/>
+                </permissions>
+            </item>
+            <item id="bratsk$Mpa.templateBrowse" insertAfter="df$AccountDoc.templateBrowse">
+                <param name="inTemplates" value="true"/>
+                <permissions>
+                    <permission target="bratsk$Mpa:create" type="ENTITY_OP"/>
+                </permissions>
+            </item>
+        </menu>
+
+        <separator/>
+
+        <item id="df$DocKind.browse"/>
+    </menu>
+
+    <menu id="office">
+        <item id="df$DocIncome.browse" shortcut="${thesis.shortcut.docIncome}"/>
+        <item id="df$DocOutcome.browse" shortcut="${thesis.shortcut.docOutcome}"/>
+        <item id="df$DocInternal.browse" shortcut="${thesis.shortcut.docInternal}"/>
+        <separator/>
+        <item id="df$OfficeFileNomenclature.browse"/>
+        <item id="df$OfficeFile.browse"/>
+        <separator/>
+        <item id="df$DocReceivingMethod.browse"/>
+        <item id="df$ReservationNumber.browse"/>
+        <item id="streamRegistration" class="com.haulmont.thesis.web.ui.common.CreateStreamRegistrationDoc">
+            <permissions>
+                <permission type="SCREEN" target="df$FastRegistration"/>
+                <permission type="ENTITY_OP" target="df$SimpleDoc:create"/>
+            </permissions>
+            <param name="ITEM" value="newItem"/>
+        </item>
+
+        <item id="registrationFormCreator" class="com.haulmont.thesis.web.ui.common.CreateSimpleRegistrationDoc"
+              shortcut="${thesis.shortcut.fastRegistration}">
+            <permissions>
+                <permission type="SCREEN" target="df$FastRegistration"/>
+                <permission type="ENTITY_OP" target="df$SimpleDoc:create"/>
+            </permissions>
+            <param name="ITEM" value="newItem"/>
+        </item>
+    </menu>
+
+    <menu id="archive">
+        <item id="ts$ArchivedSimpleDoc.browse">
+            <param name="archived" value="true"/>
+        </item>
+        <item id="ts$ArchivedContract.browse">
+            <param name="archived" value="true"/>
+        </item>
+        <item id="ts$ArchivedAccountDoc.browse">
+            <param name="archived" value="true"/>
+            <permissions>
+                <permission type="SCREEN" target="df$AccountDoc.screen"/>
+            </permissions>
+        </item>
+        <item id="ts$ArchivistWorkplace"/>
+    </menu>
+
+    <menu id="reference">
+        <!-- Taskman -->
+        <item id="tm$Priority.browse"/>
+        <item id="tm$ProjectGroup.browse"/>
+        <item id="df$Category.browse"/>
+        <item id="wf$UserGroup.browse"/>
+        <item id="wf$AttachTypes.browse"/>
+        <item screen="bratsk$RelationTypeMPA.browse" caption="mainMsg://menu_config.bratsk$RelationTypeMPA.browse"/>
+        <item id="bratsk$ThemaRubric.lookup"/>
+        <!-- DocfOneToManylow -->
+        <separator/>
+
+        <separator/>
+        <item id="df$Organization.browse"/>
+        <item id="df$Department.browse"/>
+        <item id="df$Employee.browse" shortcut="${thesis.shortcut.employeeBrowse}"/>
+        <item id="df$Position.browse"/>
+        <item id="df$UserSubstitution.browse"/>
+        <item id="df$TypicalResolution.browse"/>
+
+        <separator/>
+
+        <menu id="kontragent">
+            <item id="df$Company.browse" shortcut="${thesis.shortcut.companyBrowse}"/>
+            <item id="df$Individual.browse"/>
+        </menu>
+
+        <menu id="bank_and_cur">
+            <item id="df$Currency.browse"/>
+            <item id="df$Bank.browse"/>
+            <item id="df$BankRegion.browse"/>
+        </menu>
+
+        <item id="ts$SubscriberEdm.browse"/>
+    </menu>
+
+    <menu id="administration">
+        <menu id="userSettings">
+            <item id="sec$User.browse" shortcut="${thesis.shortcut.userBrowse}"/>
+            <item id="sec$UserSessionEntity.browse"/>
+            <item id="reassignment.form"/>
+        </menu>
+        <item id="sec$Group.browse"/>
+        <item id="sec$Role.browse"/>
+        <separator/>
+        <item id="systemSettings"/>
+        <separator/>
+        <menu id="basicSettings">
+            <item id="ts$CardType.browse"/>
+            <item id="df$Numerator.browse"/>
+            <item id="wf$Proc.browse"/>
+            <item id="report$Report.browse"/>
+            <item id="df$ImportDataType.browse"/>
+            <item id="transferOfficeFile"/>
+            <item id="wf$WorkCalendar.browse"/>
+            <separator/>
+            <item id="ts$VoiceCommandSynonym.browse"/>
+            <item id="ts$ComplexVoiceCommand.browse"/>
+        </menu>
+        <item id="jmxConsole"/>
+        <menu id="monitoring">
+            <item id="serverLog"/>
+            <item id="sys$ScheduledTask.browse"/>
+            <item id="performanceStatistics"/>
+            <item id="screenProfiler"/>
+        </menu>
+        <item id="printDomain" class="com.haulmont.cuba.web.app.domain.DomainProvider"/>
+        <item id="entityRestore"/>
+        <separator/>
+        <item id="wf$Design.browse"/>
+        <separator/>
+        <menu id="appointments">
+            <item id="am$AppointmentType.browse"/>
+            <item id="am$Appointment.browse"/>
+            <item id="am$AppointmentScript.browse"/>
+            <separator/>
+            <item id="appointmentSettingsWindow" openType="DIALOG"/>
+        </menu>
+        <separator/>
+        <menu id="mobileClientSettings">
+            <item id="userMobileBrowse"/>
+            <item id="mobileClientAdministrationWindow"/>
+        </menu>
+        <separator/>
+        <menu id="edm">
+            <item id="ts$OperatorEdm.browse"/>
+            <item id="ts$EdmSending.browse"/>
+        </menu>
+        <separator/>
+        <item id="df$AppIntegrationLog.browse"/>
+        <separator/>
+        <menu id="sms">
+            <item id="wf$UserNotifiedBySms.browse"/>
+            <item id="wf$SendingSms.browse"/>
+        </menu>
+        <separator/>
+        <item id="portalIntegration"/>
+    </menu>
+
+    <menu id="help">
+        <!--        <item id="helpMainScreen" class="com.haulmont.thesis.web.ui.instruction.HelpWindows"/>-->
+        <item id="tm$Settings" shortcut="${thesis.shortcut.settings}"/>
+        <item id="logWindow" class="com.haulmont.cuba.web.log.LogWindowLauncher"/>
+        <item id="sec$ScreenHistory.browse" openType="DIALOG"/>
+        <item id="feedback" openType="DIALOG"/>
+        <separator/>
+        <item id="df$About" openType="DIALOG"/>
+    </menu>
+
+</menu-config>

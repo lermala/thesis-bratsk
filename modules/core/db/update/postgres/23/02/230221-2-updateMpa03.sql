@@ -1,0 +1,2 @@
+alter table BRATSK_MPA add constraint FK_BRATSK_MPA_ON_EXECUTOR_USER foreign key (EXECUTOR_USER_ID) references SEC_USER(ID);
+create index IDX_BRATSK_MPA_ON_EXECUTOR_USER on BRATSK_MPA (EXECUTOR_USER_ID);

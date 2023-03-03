@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        class="com.company.bratsk.web.ui.statusnormativ.StatusNormativEdit"
+        messagesPack="com.company.bratsk.web.ui.statusnormativ"
+        caption="msg://editCaption"
+        datasource="statusNormativDs">
+    <dsContext>
+        <datasource id="statusNormativDs"
+                    class="com.company.bratsk.entity.StatusNormativ"
+                    view="edit">
+        </datasource>
+    </dsContext>
+    <assign name="width" value="theme://thesis.gui.editor-fields.width"/>
+    <assign name="actionsPanelWidth" value="theme://thesis.edit-actions-pane.width"/>
+    <layout expand="mainPane" spacing="true">
+        <hbox id="mainPane" expand="tabsheet" stylename="no-window-padding-right" width="100%">
+            <tabSheet id="tabsheet" stylename="editor-main-tabsheet" height="100%">
+                <tab id="mainTab" caption="msg://mainTab">
+                    <scrollBox id="mainTabScrollBox" orientation="horizontal" scrollBars="both" width="100%"
+                               height="100%">
+                        <hbox id="mainGridBox" stylename="thesis-main-grid-box">
+                            <grid id="leftGrid" spacing="true" margin="true, true, false, false">
+                                <columns>
+                                    <column flex="1"/>
+                                </columns>
+                                <rows>
+                                    <row id="codeRow">
+                                        <textField id="code" property="code" datasource="statusNormativDs"
+                                                   width="theme://thesis.gui.editor-fields.width"
+                                                   caption="msg://com.company.bratsk.entity/StatusNormativ.code"/>
+                                    </row>
+                                    <row id="nameRow">
+                                        <textField id="name" property="name" datasource="statusNormativDs"
+                                                   width="theme://thesis.gui.editor-fields.width"
+                                                   caption="msg://com.company.bratsk.entity/StatusNormativ.name"/>
+                                    </row>
+                                </rows>
+                            </grid>
+                        </hbox>
+                    </scrollBox>
+                </tab>
+            </tabSheet>
+            <frame id="windowActions" screen="editWindowVerticalActions" width="${actionsPanelWidth}"/>
+        </hbox>
+    </layout>
+</window>

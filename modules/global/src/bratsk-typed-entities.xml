@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<entities xmlns="http://schemas.haulmont.com/thesis/typed-entities.xsd">
+    <entity metaClass="bratsk$Mpa"/>
+    <entity metaClass="bratsk$ExtTaskGroupTask">
+        <property name="responsibleExecutor" controlledByType="false"/>
+    </entity>
+    <entity metaClass="bratsk$ExtTask">
+        <property name="confirmRequired"
+                  controlledByType="false"/>
+        <property name="subtasksFinished"
+                  controlledByType="false"/>
+    </entity>
+    <entity metaClass="bratsk$Mpa">
+        <property name="mpaStatus" controlledByType="false"/>
+    </entity>
+</entities>

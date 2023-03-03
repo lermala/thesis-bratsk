@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:ext="http://schemas.haulmont.com/cuba/window-ext.xsd"
+        class="com.company.bratsk.web.ui.taskpattern.ExtHoldingTaskPatternEditor"
+        extends="com/haulmont/thesis_holding/web/ui/taskpattern/taskpattern-edit.xml"
+        messagesPack="com.company.bratsk.web.ui.taskpattern">
+    <layout/>
+</window>

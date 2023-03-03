@@ -1,0 +1,27 @@
+/*
+ * Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+ * Haulmont Samara proprietary and confidential.
+ * Use is subject to license terms.
+ */
+
+package process.mpaEndorsement
+
+import com.haulmont.cuba.core.global.AppBeans
+import com.haulmont.thesis.core.notification.NotificationParamBuilderAPI
+import com.haulmont.thesis.core.notification.NotificationScriptType
+import com.haulmont.thesis.core.notification.NotificationTemplateAPI
+import com.haulmont.thesis.core.notification.TemplateBuilder
+
+def template = TemplateBuilder.create()
+        .add(TemplateBuilder.USER_NAME)
+        .add(TemplateBuilder.MAIN_MSG)
+        .add(TemplateBuilder.CONTRACTOR)
+        .add(TemplateBuilder.THEME)
+        .add(TemplateBuilder.SENDER_COMMENT)
+        .add(TemplateBuilder.PARTICIPANTS)
+        .add(TemplateBuilder.FOOTER)
+        .build()
+
+binding.setVariable("notificationType", NotificationScriptType.OBSERVE)
+binding.setVariable("body", AppBeans.get(NotificationTemplateAPI.class).processTemplate(template, binding.getVariables()))
+binding.setVariable("subject", AppBeans.get(NotificationParamBuilderAPI.class).getSubject(binding.getVariables()));

@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<views xmlns="http://schemas.haulmont.com/cuba/view.xsd">
+    <view class="com.company.bratsk.entity.ExtTask"
+          extends="browse"
+          name="browse"
+          overwrite="true">
+    </view>
+    <view class="com.company.bratsk.entity.ExtTask"
+          extends="edit"
+          name="edit"
+          overwrite="true">
+    </view>
+
+    <view entity="bratsk$Mpa" name="for-status-change" extends="_local">
+        <property name="mpaStatus" view="relationType-edit"/>
+    </view>
+
+    <view entity="bratsk$Mpa" name="browse" extends="_local">
+        <property name="approverUser" view="_minimal"/>
+        <property name="executorUser" view="_minimal"/>
+        <property name="prepared" view="_minimal"/>
+        <property name="proc" view="proc-minimal"/>
+        <property name="substitutedCreator" view="user-minimal"/>
+        <property name="docKind" view="_minimal"/>
+        <property name="organization" view="_minimal"/>
+        <property name="department" view="_minimal"/>
+        <property name="docCategory" view="_minimal"/>
+        <property name="creator" view="user-minimal"/>
+        <property name="category" view="_minimal"/>
+        <property name="owner" view="_minimal"/>
+        <property name="project" view="_minimal"/>
+        <property name="parentCard" view="_minimal"/>
+        <property name="contractor" view="_minimal"/>
+        <property name="createdBy"/>
+        <property name="createTs"/>
+        <property name="packageDoc" view="with-proc-base-info"/>
+        <property name="mpaStatus" view="relationType-edit"/>
+        <property name="statusNormativ" view="_minimal"/>
+        <property name="thematicPubric" view="_minimal"/>
+
+    </view>
+    <view entity="bratsk$Mpa" name="edit" extends="_local">
+        <property name="approverUser" view="_minimal"/>
+        <property name="executorUser" view="_minimal"/>
+        <property name="prepared" view="_minimal"/>
+        <property name="category" view="_minimal"/>
+        <property name="procs" view="card-edit"/>
+        <property name="roles" view="card-edit"/>
+        <property name="attachments" view="doc-edit"/>
+        <property name="substitutedCreator" view="user-minimal"/>
+        <property name="parentCard" view="card-tree-for-parent"/>
+        <property name="proc" view="_local"/>
+        <property name="project" view="_minimal"/>
+        <property name="projects" view="_minimal"/>
+        <property name="organization" view="_minimal"/>
+        <property name="docKind" view="edit"/>
+        <property name="owner" view="withuserdepartment"/>
+        <property name="docCategory" view="_local"/>
+        <property name="department" view="_local"/>
+        <property name="versionOf" view="_minimal"/>
+        <property name="contractor" view="_minimal"/>
+        <property name="cardAdditionalInfo" view="_local"/>
+        <property name="createdBy"/>
+        <property name="createTs"/>
+        <property name="packageDoc" view="with-proc-base-info"/>
+        <property name="mpaStatus" view="relationType-edit"/>
+        <property name="thematicPubric" view="_minimal"/>
+        <property name="statusNormativ" view="_local"/>
+    </view>
+    <view entity="bratsk$Mpa" name="cycle" extends="_local">
+        <property name="docOfficeData" view="cycle"/>
+        <property name="parentCard" view="_minimal"/>
+    </view>
+    <view entity="bratsk$Mpa" name="reassignmentedit" extends="_local">
+        <property name="roles" view="reassignmentcardrole"/>
+        <property name="proc" view="_local"/>
+        <property name="procs" view="reassignmentcardproc"/>
+        <property name="docKind" view="edit"/>
+        <property name="docCategory" view="_local"/>
+        <property name="owner" view="withuserdepartment"/>
+        <property name="substitutedCreator" view="user-minimal"/>
+        <property name="category" view="_minimal"/>
+        <property name="assignments">
+            <property name="user"/>
+            <property name="finished"/>
+        </property>
+    </view>
+    <view entity="bratsk$Mpa" name="version" extends="_local">
+        <property name="createTs"/>
+        <property name="docKind" view="_minimal"/>
+        <property name="versionOf" view="_local"/>
+    </view>
+    <view entity="bratsk$Mpa" name="tray-notification" extends="_minimal">
+        <property name="docKind" view="edit"/>
+        <property name="registered"/>
+        <property name="regNo"/>
+        <property name="regDate"/>
+        <property name="number"/>
+        <property name="date"/>
+        <property name="description"/>
+    </view>
+    <view entity="bratsk$StatusNormativ" name="browse" extends="_local"/>
+    <view entity="bratsk$StatusNormativ" name="edit" extends="_local"/>
+    <view entity="bratsk$RelationTypeMPA" name="relationType-edit" extends="_local">
+        <property name="reverseName" view="_minimal">
+            <property name="reverseName" view="_minimal"/>
+        </property>
+    </view>
+    <view entity="bratsk$RelatedCards" name="edit" extends="_local">
+        <property name="sourceCard" view="_minimal"/>
+        <property name="relatedCard" view="_minimal"/>
+        <property name="sourceRelationType" view="_minimal"/>
+        <property name="relatedRelationType" view="_minimal"/>
+        <property name="createTs"/>
+        <property name="createdBy"/>
+    </view>
+    <view entity="bratsk$ThemaRubric" name="browse" extends="_local"/>
+    <view entity="bratsk$ThemaRubric" name="edit" extends="_local">
+        <property name="parentThemaRubric" view="_local">
+        </property>
+    </view>
+
+</views>

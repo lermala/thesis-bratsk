@@ -1,0 +1,82 @@
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window
+        xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        class="com.company.bratsk.web.ui.common.links.CardsToRelateController"
+        messagesPack="com.company.bratsk.web.ui.common.links"
+        lookupComponent="mpaTable"
+        caption="msg://caption">
+    <dsContext>
+        <collectionDatasource id="mpaDs" class="com.company.bratsk.entity.Mpa" view="browse"
+                              datasourceClass="com.haulmont.thesis.web.ui.DocDatasource">
+            <query>
+                <![CDATA[select mpa from bratsk$Mpa mpa where mpa.template = false and mpa.deleteTs is null
+                and mpa.versionOf is null and mpa.isArchivedDoc = false order by mpa.dateTime]]>
+                <filter>
+                    <and>
+                        <c><![CDATA[mpa.id <> :param$card]]></c>
+                        <c><![CDATA[mpa.id not in :param$relatedCards]]></c>
+                    </and>
+                </filter>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="relationTypesForwardDs" class="com.company.bratsk.entity.RelationTypeMPA"
+                              view="relationType-edit">
+            <query>
+                <![CDATA[select e from bratsk$RelationTypeMPA e where e.isSystem <> true
+                and e.isAnAction = true]]>
+            </query>
+        </collectionDatasource>
+        <collectionDatasource id="relationTypesBackwardDs" class="com.company.bratsk.entity.RelationTypeMPA"
+                              view="relationType-edit">
+            <query>
+                <![CDATA[select e from bratsk$RelationTypeMPA e where e.isSystem <> true
+                and e.isAnAction <> true]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+
+    <layout expand="cardRelatesBox">
+        <vbox id="cardRelatesBox" spacing="true" expand="mpaTable" width="100%">
+                    <filter datasource="mpaDs" id="mpaFilter" stylename="edit-area" applyTo="mpaTable">
+                        <properties include=".*"
+                                    exclude="(id)|(createTs)|(createdBy)|(jbpmProcessId)"/>
+                    </filter>
+                    <table id="mpaTable" editable="false" width="100%" multiselect="false">
+                        <rowsCount/>
+                        <columns>
+                            <column id="hasAttachments" caption="msg://hasAttachments">
+                                <formatter
+                                        class="com.haulmont.thesis.gui.components.formatter.HasAttachmentsFormatter"/>
+                            </column>
+                            <column id="important" caption="msg://important">
+                                <formatter class="com.haulmont.thesis.gui.components.formatter.ImportantDocFormatter"/>
+                            </column>
+                            <column id="docKind" caption="msg://cardType"/>
+                            <column id="number"/>
+                            <column id="regNo" caption="msg://regNo"/>
+                            <column id="regDate" caption="msg://regDate"/>
+                            <column id="comment" caption="msg://description" maxTextLength="30"/>
+                        </columns>
+                        <rows datasource="mpaDs"/>
+                    </table>
+                <grid id="relationTypesGrid" spacing="true" height="AUTO">
+                    <columns count="3"/>
+                    <rows>
+                        <row>
+                            <label id="relationType" value="msg://relationType" align="MIDDLE_CENTER"/>
+                            <lookupField id="sourceRelationType" optionsDatasource="relationTypesForwardDs"
+                                         width="170px" required="true"/>
+                            <lookupField id="relatedRelationType" optionsDatasource="relationTypesBackwardDs"
+                                         width="170px" required="true"/>
+                        </row>
+                    </rows>
+                </grid>
+        </vbox>
+        <iframe id="windowActions" screen="editWindowActions"/>
+    </layout>
+</window>

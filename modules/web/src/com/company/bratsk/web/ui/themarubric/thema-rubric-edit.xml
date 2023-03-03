@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        class="com.company.bratsk.web.ui.themarubric.ThemaRubricEdit"
+        messagesPack="com.company.bratsk.web.ui.themarubric"
+        caption="msg://editCaption"
+        datasource="themaRubricDs">
+
+
+    <dsContext>
+        <datasource id="themaRubricDs" class="com.company.bratsk.entity.ThemaRubric" view="edit"/>
+        <datasource id="themaRubricDsH" class="com.company.bratsk.entity.ThemaRubric" view="edit"/>
+        <collectionDatasource id="parentThemaRubricDs" class="com.company.bratsk.entity.ThemaRubric"
+                              view="browse">
+            <query>
+                <![CDATA[select e from bratsk$ThemaRubric e where (not e.id = :param$ITEM)]]>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+
+    <layout expand="windowActions" spacing="true">
+        <vbox id="mainGridBox" spacing="true" stylename="edit-area">
+            <grid id="grid" spacing="true">
+                <columns>
+                    <column flex="1"/>
+                </columns>
+                <rows>
+                    <row>
+                        <textField id="name" datasource="themaRubricDs" property="name" width="${width}"
+                                   caption="msg://com.company.bratsk.entity/ThemaRubric.name"
+                                   required="true" requiredMessage="msg://com.company.bratsk.entity/ThemaRubric.name"/>
+                    </row>
+                    <row>
+                        <pickerField id="parentThemaRubric" datasource="themaRubricDs" property="parentThemaRubric"
+                                     caption="msg://parentThemaRubric" width="${width}"/>
+                    </row>
+                </rows>
+            </grid>
+        </vbox>
+        <frame id="windowActions" screen="editWindowActions"/>
+    </layout>
+    <assign name="width" value="theme://thesis.gui.dialog-window.width"/>
+
+</window>

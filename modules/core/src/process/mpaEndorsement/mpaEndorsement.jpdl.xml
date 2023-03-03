@@ -1,0 +1,210 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<process name="MPA Endorsement" key="mpaEndorsement" xmlns="http://jbpm.org/4.2/jpdl">
+
+    <on event="end">
+        <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener"/>
+        <event-listener class="com.haulmont.workflow.core.activity.RemoveTimersEventListener"/>
+    </on>
+
+    <start name="Start">
+        <transition to="Started">
+            <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener">
+                <field name="transition">
+                    <string value="started"/>
+                </field>
+            </event-listener>
+        </transition>
+    </start>
+
+    <custom name="Started" class="com.haulmont.thesis.core.activity.task.StartActivity">
+        <transition name="Ok" to="SwitchToActivity">
+            <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener">
+                <field name="transition">
+                    <string value="start_endorsement"/>
+                </field>
+            </event-listener>
+        </transition>
+    </custom>
+
+    <custom name="SwitchToActivity" class="com.haulmont.workflow.core.activity.IsRoleAssignedDecider">
+        <property name="role">
+            <string value="Endorsement"/>
+        </property>
+        <transition name="yes" to="Endorsement"/>
+        <transition name="no" to="Approval"/>
+    </custom>
+
+    <custom name="SwitchToPreparationOrImprovement" class="com.haulmont.workflow.core.activity.IsRoleAssignedDecider">
+        <property name="role">
+            <string value="Prepared"/>
+        </property>
+        <transition name="yes" to="Preparation"/>
+        <transition name="no" to="Improvement"/>
+    </custom>
+
+    <custom name="Preparation" class="com.haulmont.workflow.core.activity.Assigner">
+        <property name="role">
+            <string value="Prepared"/>
+        </property>
+        <property name="description">
+            <string value="msg://Preparation.descr"/>
+        </property>
+        <transition name="ToEndorsement" to="SwitchToActivity"/>
+        <transition name="ToImprovement" to="Improvement"/>
+    </custom>
+
+    <custom name="Improvement" class="com.haulmont.workflow.core.activity.Assigner">
+        <property name="role">
+            <string value="Initiator"/>
+        </property>
+        <property name="description">
+            <string value="msg://Improvement.descr"/>
+        </property>
+        <transition name="ToEndorsement" to="SwitchToActivity"/>
+    </custom>
+
+    <custom name="Endorsement" class="com.haulmont.thesis.core.activity.doc.SigningUniversalAssigner">
+        <property name="role">
+            <string value="Endorsement"/>
+        </property>
+        <property name="successTransition">
+            <string value="Ok"/>
+        </property>
+        <property name="description">
+            <string value="msg://Endorsement.descr"/>
+        </property>
+        <property name="timersFactory">
+            <object class="process.mpaEndorsement.timers.EndorsementTimersFactory"/>
+        </property>
+        <transition name="Ok" to="SwitchToApproval">
+            <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener">
+                <field name="transition">
+                    <string value="end_endorsement"/>
+                </field>
+            </event-listener>
+        </transition>
+        <transition name="NotOk" to="CreateVersion"/>
+    </custom>
+
+    <custom name="SwitchToApproval" class="com.haulmont.workflow.core.activity.IsRoleAssignedDecider">
+        <property name="role">
+            <string value="Approver"/>
+        </property>
+        <transition name="yes" to="Approval"/>
+        <transition name="no" to="EndorsementSwitchToRegistration"/>
+    </custom>
+
+    <custom name="CreateVersion" class="com.haulmont.thesis.core.activity.doc.VersionCreator">
+        <transition to="SwitchToPreparationOrImprovement">
+            <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener">
+                <field name="transition">
+                    <string value="create_version"/>
+                </field>
+            </event-listener>
+        </transition>
+    </custom>
+
+    <custom name="Approval" class="com.haulmont.thesis.core.activity.doc.SigningAssigner">
+        <property name="role">
+            <string value="Approver"/>
+        </property>
+        <property name="description">
+            <string value="msg://Approval.descr"/>
+        </property>
+        <transition name="Ok" to="ApprovalSwitchToRegistration">
+            <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener">
+                <field name="transition">
+                    <string value="approval"/>
+                </field>
+            </event-listener>
+        </transition>
+        <transition name="NotOk" to="CreateVersion"/>
+        <transition name="Refuse" to="NotApproved"/>
+    </custom>
+
+    <custom name="Approved" class="com.haulmont.workflow.core.activity.CardActivity">
+        <property name="observers">
+            <string value="Initiator"/>
+        </property>
+        <transition to="End"/>
+    </custom>
+
+    <custom name="ApprovalSwitchToRegistration" class="process.mpaEndorsement.activity.RegistrationDecider">
+        <property name="role">
+            <string value="Secretary"/>
+        </property>
+        <transition name="yes" to="Registration"/>
+        <transition name="no" to="Approved"/>
+    </custom>
+
+    <custom name="EndorsementSwitchToRegistration" class="process.mpaEndorsement.activity.RegistrationDecider">
+        <property name="role">
+            <string value="Secretary"/>
+        </property>
+        <transition name="yes" to="Registration"/>
+        <transition name="no" to="Complete"/>
+    </custom>
+
+    <custom name="Registration" class="com.haulmont.workflow.core.activity.Assigner">
+        <property name="role">
+            <string value="Secretary"/>
+        </property>
+        <property name="description">
+            <string value="msg://Registration.descr"/>
+        </property>
+        <on event="start">
+            <event-listener class="process.listeners.SystemProcessStateUpdater">
+                <field name="state">
+                    <string value="Registration"/>
+                </field>
+            </event-listener>
+        </on>
+        <on event="end">
+            <event-listener class="process.listeners.SystemProcessStateUpdater">
+                <field name="state">
+                    <string value="Registration"/>
+                </field>
+                <field name="remove">
+                    <true/>
+                </field>
+            </event-listener>
+        </on>
+        <transition name="Ok" to="Registered"/>
+    </custom>
+
+    <custom name="Complete" class="com.haulmont.workflow.core.activity.CardActivity">
+        <property name="observers">
+            <string value="Initiator"/>
+        </property>
+        <transition to="End">
+            <event-listener class="process.mpaEndorsement.listeners.EndorsementEventListener">
+                <field name="transition">
+                    <string value="complete"/>
+                </field>
+            </event-listener>
+        </transition>
+    </custom>
+
+    <custom name="Registered" class="com.haulmont.workflow.core.activity.CardActivity">
+        <property name="observers">
+            <string value="Initiator"/>
+        </property>
+        <transition to="End"/>
+    </custom>
+
+    <custom name="NotApproved" class="com.haulmont.workflow.core.activity.CardActivity">
+        <property name="observers">
+            <string value="Initiator"/>
+        </property>
+        <transition to="End"/>
+    </custom>
+
+    <end name="End"/>
+
+</process>

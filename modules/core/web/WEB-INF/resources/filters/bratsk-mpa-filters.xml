@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright (c) 2023 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+
+<filters xmlns="http://schemas.haulmont.com/thesis/5.1/filters.xsd">
+
+    <!-- Фильтр "По содержимому" -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="bratsk$Mpa.lookup"
+                          code="Doc.SysFilter.ByContent"
+                          entityName="bratsk$Mpa"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/by-content-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+
+    <!-- Фильтр по виду документа -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="bratsk$Mpa.lookup"
+                          code="Doc.SysFilter.ByDocumentKind"
+                          entityName="bratsk$Mpa"/>
+            <filterEntity screen="bratsk$Mpa.templateBrowse"
+                          code="Doc.SysFilter.ByDocumentKind"
+                          entityName="bratsk$Mpa"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/doc-kind-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+
+    <!-- Фильтр по участию в процессе и состоянию -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="bratsk$Mpa.lookup"
+                          code="SysFilter.ByProcRole"
+                          entityName="bratsk$Mpa"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/proc-and-state-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+
+    <!-- Фильтр "Moй отдел" -->
+    <filterDescriptor>
+        <filterEntities>
+            <filterEntity screen="bratsk$Mpa.lookup"
+                          code="SysFilter.MyDepartment"
+                          entityName="bratsk$Mpa"/>
+        </filterEntities>
+        <conditions>
+            <include href="templates/my-department-filter-conditions.xml"/>
+        </conditions>
+    </filterDescriptor>
+</filters>

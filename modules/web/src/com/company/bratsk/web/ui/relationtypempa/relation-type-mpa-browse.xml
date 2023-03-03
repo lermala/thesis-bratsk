@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!--
+  ~ Copyright (c) 2022 LTD Haulmont Samara. All Rights Reserved.
+  ~ Haulmont Samara proprietary and confidential.
+  ~ Use is subject to license terms.
+  -->
+<window xmlns="http://schemas.haulmont.com/cuba/window.xsd"
+        xmlns:thesis="http://schemas.haulmont.com/thesis/thesis-window.xsd"
+        class="com.company.bratsk.web.ui.relationtypempa.RelationTypeMPABrowse"
+        messagesPack="com.company.bratsk.web.ui.relationtypempa"
+        caption="msg://browseCaption"
+        lookupComponent="relationTypeTable"
+        focusComponent="genericFilter">
+    <dsContext>
+        <collectionDatasource id="relationTypesDs"
+                              class="com.company.bratsk.entity.RelationTypeMPA"
+                              view="relationType-edit">
+            <query>
+                <![CDATA[select e from bratsk$RelationTypeMPA e where e.isSystem <> true]]>
+                <filter>
+                    <and>
+                        <c>
+                            <![CDATA[
+                                e.id <> :param$optionsFor and e.reverseName is null
+                                or e.reverseName.id = :param$optionsFor
+                            ]]>
+                        </c>
+                    </and>
+                </filter>
+            </query>
+        </collectionDatasource>
+    </dsContext>
+    <layout>
+        <vbox id="filterBox" expand="table-panel" spacing="true" height="100%">
+            <filter id="genericFilter"
+                    datasource="relationTypesDs" stylename="edit-area" applyTo="relationTypeTable">
+                <properties include=".*"
+                            exclude="(isSystem)"/>
+            </filter>
+            <vbox id="table-panel" expand="relationTypeTable" spacing="true">
+                <table id="relationTypeTable"
+                       width="100%"
+                       presentations="true"
+                       multiselect="false">
+                    <actions>
+                        <action id="create"/>
+                        <action id="edit"/>
+                        <action id="remove"/>
+                    </actions>
+                    <buttonsPanel id="buttonsPanel" alwaysVisible="true">
+                        <button id="createBtn"
+                                action="relationTypeTable.create"/>
+                        <thesis:separator/>
+                        <button id="editBtn"
+                                action="relationTypeTable.edit"/>
+                        <button id="removeBtn"
+                                action="relationTypeTable.remove"/>
+                    </buttonsPanel>
+                    <rowsCount/>
+                    <columns>
+                        <column id="typeName"/>
+                        <column id="reverseName"/>
+                        <column id="isAnAction"/>
+                        <column id="comment" maxTextLength="60"/>
+                    </columns>
+                    <rows datasource="relationTypesDs"/>
+                </table>
+            </vbox>
+        </vbox>
+    </layout>
+</window>

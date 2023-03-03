@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<fts-config>
+    <entities>
+
+        <entity class="com.company.bratsk.entity.Mpa">
+            <include re=".*"/>
+            <include name="attachments.file"/>
+            <include name="assignments.attachments.file"/>
+            <exclude name="cardInfos"/>
+            <exclude name="cardVariables"/>
+            <exclude name="jbpmProcessId"/>
+            <exclude name="parentCard"/>
+            <exclude name="proc"/>
+            <exclude name="procFamily"/>
+            <exclude name="procs"/>
+            <exclude name="subCards"/>
+            <exclude name="aclList"/>
+            <exclude name="cardAdditionalInfo"/>
+            <exclude name="cardUserInfo"/>
+            <exclude name="copyFrom"/>
+            <exclude name="currentActorsFullString"/>
+            <exclude name="currentActorsString"/>
+            <exclude name="edmSending"/>
+            <exclude name="signatures"/>
+            <exclude name="category"/>
+            <exclude name="addressees"/>
+            <exclude name="descriptionIfLoaded"/>
+            <exclude name="executor"/>
+            <exclude name="extraFields"/>
+            <exclude name="signedBy"/>
+            <exclude name="templateName"/>
+            <exclude name="versionOf"/>
+            <searchableIf disableDuringReindex="true">entity.versionOf == null</searchableIf>
+            <reindexQueryFilter>
+                <c join="left join {E}.versionOf v">v is null</c>
+            </reindexQueryFilter>
+        </entity>
+        <entity class="com.company.bratsk.entity.StatusNormativ">
+            <include re=".*"/>
+        </entity>
+        <entity class="com.company.bratsk.entity.ExtTaskGroupTask">
+            <include re=".*"/>
+        </entity>
+
+        <entity class="com.company.bratsk.entity.RelationTypeMPA">
+            <include re=".*"/>
+        </entity>
+        <entity class="com.company.bratsk.entity.ThemaRubric">
+            <include re=".*"/>
+        </entity>
+    </entities>
+</fts-config>

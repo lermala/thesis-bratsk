@@ -1,0 +1,20 @@
+@import "thesis-light-defaults";
+@import "com.company.bratsk/thesis-light-ext-defaults";
+@import "app-components";
+@import "com.company.bratsk/thesis-light-ext";
+
+// include auto-generated app components SCSS
+@include app_components;
+@include com_company_bratsk-thesis-light-ext;
+
+.purple {
+    color: purple;
+}
+
+.green {
+    color: green;
+}
+
+.red {
+    color: red;
+}
